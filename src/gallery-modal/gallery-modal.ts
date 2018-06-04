@@ -27,6 +27,7 @@ export class GalleryModal implements OnInit {
   private panUpDownRatio: number = 0;
   private panUpDownDeltaY: number = 0;
   private dismissed: boolean = false;
+  private autoLockSwipes: boolean = false;
 
   private width: number = 0;
   private height: number = 0;
@@ -47,6 +48,7 @@ export class GalleryModal implements OnInit {
     this.previousIcon = params.get('previousIcon') || 'arrow-round-back';
     this.nextIcon = params.get('nextIcon') || 'arrow-round-forward';
     this.initialSlide = params.get('initialSlide') || 0;
+    this.autoLockSwipes = params.get('autoLockSwipes') || false;
 
     this.initialImage = this.photos[this.initialSlide] || {};
   }
@@ -116,6 +118,7 @@ export class GalleryModal implements OnInit {
     this.resize(false);
     this.sliderLoaded = true;
     this.slidesStyle.visibility = 'visible';
+    this.lockSwipes();
   }
 
   /**
@@ -154,6 +157,7 @@ export class GalleryModal implements OnInit {
     if (this.getCurrentPictureIndex() >= this.photos.length) {
       this.slider.slideTo(this.photos.length - 1);
     }
+    this.lockSwipes();
   }
 
   /**
@@ -229,6 +233,22 @@ export class GalleryModal implements OnInit {
       this.slidesStyle.transform = 'none';
       this.slidesStyle.opacity = 1;
       this.modalStyle.backgroundColor = 'rgba(0, 0, 0, 1)';
+    }
+  }
+
+  /**
+   * Lock the slider from swiping (if necessary).
+   */
+  private lockSwipes() {
+    if (!this.autoLockSwipes) {
+      return;
+    }
+    this.slider.lockSwipes(false);
+    if (this.slider.isBeginning()) {
+      this.slider.lockSwipeToPrev(true);
+    }
+    if (this.slider.isEnd()) {
+      this.slider.lockSwipeToNext(true);
     }
   }
 }

@@ -22,6 +22,7 @@ export declare class GalleryModal implements OnInit {
     private panUpDownRatio;
     private panUpDownDeltaY;
     private dismissed;
+    private autoLockSwipes;
     private width;
     private height;
     private slidesStyle;
@@ -90,4 +91,8 @@ export declare class GalleryModal implements OnInit {
      * @param  {Hammer.Event} event
      */
     private panEndEvent(event);
+    /**
+     * Lock the slider from swiping (if necessary).
+     */
+    private lockSwipes();
 }

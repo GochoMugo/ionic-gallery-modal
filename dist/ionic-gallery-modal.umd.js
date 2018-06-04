@@ -420,6 +420,7 @@ var GalleryModal = (function () {
         this.panUpDownRatio = 0;
         this.panUpDownDeltaY = 0;
         this.dismissed = false;
+        this.autoLockSwipes = false;
         this.width = 0;
         this.height = 0;
         this.slidesStyle = {
@@ -435,6 +436,7 @@ var GalleryModal = (function () {
         this.previousIcon = params.get('previousIcon') || 'arrow-round-back';
         this.nextIcon = params.get('nextIcon') || 'arrow-round-forward';
         this.initialSlide = params.get('initialSlide') || 0;
+        this.autoLockSwipes = params.get('autoLockSwipes') || false;
         this.initialImage = this.photos[this.initialSlide] || {};
     }
     /**
@@ -513,6 +515,7 @@ var GalleryModal = (function () {
         this.resize(false);
         this.sliderLoaded = true;
         this.slidesStyle.visibility = 'visible';
+        this.lockSwipes();
     };
     /**
      * Disables the scroll through the slider
@@ -551,6 +554,7 @@ var GalleryModal = (function () {
         if (this.getCurrentPictureIndex() >= this.photos.length) {
             this.slider.slideTo(this.photos.length - 1);
         }
+        this.lockSwipes();
     };
     /**
      * Called while dragging to close modal
@@ -619,6 +623,22 @@ var GalleryModal = (function () {
             this.slidesStyle.transform = 'none';
             this.slidesStyle.opacity = 1;
             this.modalStyle.backgroundColor = 'rgba(0, 0, 0, 1)';
+        }
+    };
+    /**
+     * Lock the slider from swiping (if necessary).
+     * @return {?}
+     */
+    GalleryModal.prototype.lockSwipes = function () {
+        if (!this.autoLockSwipes) {
+            return;
+        }
+        this.slider.lockSwipes(false);
+        if (this.slider.isBeginning()) {
+            this.slider.lockSwipeToPrev(true);
+        }
+        if (this.slider.isEnd()) {
+            this.slider.lockSwipeToNext(true);
         }
     };
     GalleryModal.decorators = [
