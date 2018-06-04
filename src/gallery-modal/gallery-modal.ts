@@ -51,6 +51,11 @@ export class GalleryModal implements OnInit {
     this.initialImage = this.photos[this.initialSlide] || {};
   }
 
+  /** Index of the picture currently being shown. */
+  public getCurrentPictureIndex() {
+    return this.slider.getActiveIndex();
+  }
+
   public ngOnInit() {
     // call resize on init
     this.resize({});
@@ -75,6 +80,13 @@ export class GalleryModal implements OnInit {
    */
   public goToNextPicture() {
     this.slider.slideNext();
+  }
+
+  /**
+   * Choose a picture in the gallery.
+   */
+  public choosePicture(index: number) {
+    this.slider.slideTo(index);
   }
 
   private resize(event) {
@@ -127,6 +139,20 @@ export class GalleryModal implements OnInit {
     if (this.sliderDisabled) {
       this.slider.slideTo(this.currentSlide, 0, false);
       this.sliderDisabled = false;
+    }
+  }
+
+  /**
+   * Called after slide has changed.
+   *
+   * @param  {Event} event
+   */
+  private slidesDidChange(event) {
+    // NOTE/impl: In some edge cases, the slider goes beyond
+    // the last index. Force it back to the last slide.
+    // TODO: Is this fix avoidable?
+    if (this.getCurrentPictureIndex() >= this.photos.length) {
+      this.slider.slideTo(this.photos.length - 1);
     }
   }
 

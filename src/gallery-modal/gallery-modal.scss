@@ -6,7 +6,7 @@
     .controls {
       height: 0;
 
-      button {
+      & > button {
         background: rgba(0, 0, 0, 0.2);
         border-radius: 50%;
         box-shadow: none;
@@ -22,13 +22,29 @@
           top: 20px;
         }
       }
+
       .previous-button {
         left: 0;
         top: 45%;
       }
+
       .next-button {
         right: 0;
         top: 45%;
+      }
+
+      .chooser {
+        bottom: 20px;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        z-index: 10;
+
+        button {
+          background: none;
+          box-shadow: none;
+          color: #808080;
+        }
       }
     }
 
