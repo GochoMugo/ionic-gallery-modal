@@ -27,11 +27,17 @@ export declare class GalleryModal implements OnInit {
     private transitionDuration;
     private transitionTimingFunction;
     constructor(viewCtrl: ViewController, params: NavParams, element: ElementRef, platform: Platform, domSanitizer: DomSanitizer);
+    /** Index of the picture currently being shown. */
+    getCurrentPictureIndex(): number;
     ngOnInit(): void;
     /**
      * Closes the modal (when user click on CLOSE)
      */
     dismiss(): void;
+    /**
+     * Choose a picture in the gallery.
+     */
+    choosePicture(index: number): void;
     private resize(event);
     private orientationChange(event);
     /**
@@ -50,6 +56,12 @@ export declare class GalleryModal implements OnInit {
      * @param  {Event} event
      */
     private enableScroll(event);
+    /**
+     * Called after slide has changed.
+     *
+     * @param  {Event} event
+     */
+    private slidesDidChange(event);
     /**
      * Called while dragging to close modal
      *

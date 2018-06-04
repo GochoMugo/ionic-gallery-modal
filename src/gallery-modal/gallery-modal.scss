@@ -3,16 +3,35 @@
     position: relative;
     overflow: hidden;
 
-    .close-button {
-      position: absolute;
-      top: 10px;
-      left: 5px;
-      background: none;
-      box-shadow: none;
-      z-index: 10;
+    .controls {
+      height: 0;
 
-      &.button-ios {
-        top: 20px;
+      button {
+        background: none;
+        box-shadow: none;
+      }
+
+      .close-button {
+        position: absolute;
+        top: 10px;
+        left: 5px;
+        z-index: 10;
+
+        &.button-ios {
+          top: 20px;
+        }
+      }
+
+      .chooser {
+        bottom: 20px;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        z-index: 10;
+
+        button {
+          color: #808080;
+        }
       }
     }
 

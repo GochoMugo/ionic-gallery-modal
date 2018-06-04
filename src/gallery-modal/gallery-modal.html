@@ -4,9 +4,19 @@
   (window:resize)="resize($event)"
   (window:orientationchange)="orientationChange($event)"
 >
-  <button class="close-button" ion-button icon-only (click)="dismiss()">
-    <ion-icon name="{{ closeIcon }}"></ion-icon>
-  </button>
+  <div class="controls">
+    <button class="close-button" ion-button icon-only (click)="dismiss()">
+      <ion-icon name="{{ closeIcon }}"></ion-icon>
+    </button>
+    <div class="chooser" *ngIf="sliderLoaded">
+      <button class="item" ion-button icon-only small
+        *ngFor="let photo of photos; index as $index"
+        (click)="choosePicture($index)">
+        <ion-icon size="small"
+          [name]="$index === getCurrentPictureIndex() ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+      </button>
+    </div>
+  </div>
 
   <!-- Initial image while modal is animating -->
   <div class="image-on-top" [hidden]="sliderLoaded">
@@ -25,6 +35,7 @@
     [initialSlide]="initialSlide"
     [ngStyle]="slidesStyle"
     touch-events
+    (ionSlideDidChange)="slidesDidChange($event)"
     (ionSlideDrag)="slidesDrag($event)"
     (panup)="panUpDownEvent($event)"
     (pandown)="panUpDownEvent($event)"
