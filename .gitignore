@@ -29,4 +29,8 @@ Desktop.ini
 **/*.ngfactory.ts
 
 # Build files
-dist/*
+# We are distributing this package over git (not npm).
+# Commit main output to history thus available when
+# package is cloned during `npm install`.
+# dist/*
+ionic-gallery-modal-*.tgz
