@@ -25,6 +25,7 @@
     [initialSlide]="initialSlide"
     [ngStyle]="slidesStyle"
     touch-events
+    (ionSlideDidChange)="slidesDidChange($event)"
     (ionSlideDrag)="slidesDrag($event)"
     (panup)="panUpDownEvent($event)"
     (pandown)="panUpDownEvent($event)"

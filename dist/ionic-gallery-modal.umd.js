@@ -418,6 +418,7 @@ var GalleryModal = (function () {
         this.panUpDownRatio = 0;
         this.panUpDownDeltaY = 0;
         this.dismissed = false;
+        this.autoLockSwipes = false;
         this.width = 0;
         this.height = 0;
         this.slidesStyle = {
@@ -431,6 +432,7 @@ var GalleryModal = (function () {
         this.photos = params.get('photos') || [];
         this.closeIcon = params.get('closeIcon') || 'arrow-back';
         this.initialSlide = params.get('initialSlide') || 0;
+        this.autoLockSwipes = params.get('autoLockSwipes') || false;
         this.initialImage = this.photos[this.initialSlide] || {};
     }
     /**
@@ -480,6 +482,7 @@ var GalleryModal = (function () {
         this.resize(false);
         this.sliderLoaded = true;
         this.slidesStyle.visibility = 'visible';
+        this.lockSwipes();
     };
     /**
      * Disables the scroll through the slider
@@ -504,6 +507,15 @@ var GalleryModal = (function () {
             this.slider.slideTo(this.currentSlide, 0, false);
             this.sliderDisabled = false;
         }
+    };
+    /**
+     * Called after slide has changed.
+     *
+     * @param {?} event
+     * @return {?}
+     */
+    GalleryModal.prototype.slidesDidChange = function (event) {
+        this.lockSwipes();
     };
     /**
      * Called while dragging to close modal
@@ -574,10 +586,26 @@ var GalleryModal = (function () {
             this.modalStyle.backgroundColor = 'rgba(0, 0, 0, 1)';
         }
     };
+    /**
+     * Lock the slider from swiping (if necessary).
+     * @return {?}
+     */
+    GalleryModal.prototype.lockSwipes = function () {
+        if (!this.autoLockSwipes) {
+            return;
+        }
+        this.slider.lockSwipes(false);
+        if (this.slider.isBeginning()) {
+            this.slider.lockSwipeToPrev(true);
+        }
+        if (this.slider.isEnd()) {
+            this.slider.lockSwipeToNext(true);
+        }
+    };
     GalleryModal.decorators = [
         { type: core.Component, args: [{
                     selector: 'gallery-modal',
-                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
+                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDidChange)=\"slidesDidChange($event)\" (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
                     styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .close-button { position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; } :host .gallery-modal .close-button.button-ios { top: 20px; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
                 },] },
     ];

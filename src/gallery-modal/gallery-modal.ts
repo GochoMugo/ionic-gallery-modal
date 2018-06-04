@@ -25,6 +25,7 @@ export class GalleryModal implements OnInit {
   private panUpDownRatio: number = 0;
   private panUpDownDeltaY: number = 0;
   private dismissed: boolean = false;
+  private autoLockSwipes: boolean = false;
 
   private width: number = 0;
   private height: number = 0;
@@ -43,6 +44,7 @@ export class GalleryModal implements OnInit {
     this.photos = params.get('photos') || [];
     this.closeIcon = params.get('closeIcon') || 'arrow-back';
     this.initialSlide = params.get('initialSlide') || 0;
+    this.autoLockSwipes = params.get('autoLockSwipes') || false;
 
     this.initialImage = this.photos[this.initialSlide] || {};
   }
@@ -86,6 +88,7 @@ export class GalleryModal implements OnInit {
     this.resize(false);
     this.sliderLoaded = true;
     this.slidesStyle.visibility = 'visible';
+    this.lockSwipes();
   }
 
   /**
@@ -110,6 +113,15 @@ export class GalleryModal implements OnInit {
       this.slider.slideTo(this.currentSlide, 0, false);
       this.sliderDisabled = false;
     }
+  }
+
+  /**
+   * Called after slide has changed.
+   *
+   * @param  {Event} event
+   */
+  private slidesDidChange(event) {
+    this.lockSwipes();
   }
 
   /**
@@ -185,6 +197,22 @@ export class GalleryModal implements OnInit {
       this.slidesStyle.transform = 'none';
       this.slidesStyle.opacity = 1;
       this.modalStyle.backgroundColor = 'rgba(0, 0, 0, 1)';
+    }
+  }
+
+  /**
+   * Lock the slider from swiping (if necessary).
+   */
+  private lockSwipes() {
+    if (!this.autoLockSwipes) {
+      return;
+    }
+    this.slider.lockSwipes(false);
+    if (this.slider.isBeginning()) {
+      this.slider.lockSwipeToPrev(true);
+    }
+    if (this.slider.isEnd()) {
+      this.slider.lockSwipeToNext(true);
     }
   }
 }
