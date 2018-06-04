@@ -15,11 +15,14 @@ export declare class GalleryModal implements OnInit {
     private currentSlide;
     private sliderLoaded;
     private closeIcon;
+    private previousIcon;
+    private nextIcon;
     private resizeTriggerer;
     private slidesDragging;
     private panUpDownRatio;
     private panUpDownDeltaY;
     private dismissed;
+    private autoLockSwipes;
     private width;
     private height;
     private slidesStyle;
@@ -27,11 +30,25 @@ export declare class GalleryModal implements OnInit {
     private transitionDuration;
     private transitionTimingFunction;
     constructor(viewCtrl: ViewController, params: NavParams, element: ElementRef, platform: Platform, domSanitizer: DomSanitizer);
+    /** Index of the picture currently being shown. */
+    getCurrentPictureIndex(): number;
     ngOnInit(): void;
     /**
      * Closes the modal (when user click on CLOSE)
      */
     dismiss(): void;
+    /**
+     * Move to the previous picture in gallery.
+     */
+    goToPreviousPicture(): void;
+    /**
+     * Move to the next picture in gallery.
+     */
+    goToNextPicture(): void;
+    /**
+     * Choose a picture in the gallery.
+     */
+    choosePicture(index: number): void;
     private resize(event);
     private orientationChange(event);
     /**
@@ -51,6 +68,12 @@ export declare class GalleryModal implements OnInit {
      */
     private enableScroll(event);
     /**
+     * Called after slide has changed.
+     *
+     * @param  {Event} event
+     */
+    private slidesDidChange(event);
+    /**
      * Called while dragging to close modal
      *
      * @param  {Event} event
@@ -68,4 +91,8 @@ export declare class GalleryModal implements OnInit {
      * @param  {Hammer.Event} event
      */
     private panEndEvent(event);
+    /**
+     * Lock the slider from swiping (if necessary).
+     */
+    private lockSwipes();
 }

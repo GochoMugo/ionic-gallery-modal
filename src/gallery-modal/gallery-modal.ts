@@ -20,11 +20,14 @@ export class GalleryModal implements OnInit {
   private currentSlide: number = 0;
   private sliderLoaded: boolean = false;
   private closeIcon: string = 'arrow-back';
+  private previousIcon: string = 'arrow-round-back';
+  private nextIcon: string = 'arrow-round-forward';
   private resizeTriggerer: Subject<any> = new Subject();
   private slidesDragging: boolean = false;
   private panUpDownRatio: number = 0;
   private panUpDownDeltaY: number = 0;
   private dismissed: boolean = false;
+  private autoLockSwipes: boolean = false;
 
   private width: number = 0;
   private height: number = 0;
@@ -42,9 +45,17 @@ export class GalleryModal implements OnInit {
   constructor(private viewCtrl: ViewController, params: NavParams, private element: ElementRef, private platform: Platform, private domSanitizer: DomSanitizer) {
     this.photos = params.get('photos') || [];
     this.closeIcon = params.get('closeIcon') || 'arrow-back';
+    this.previousIcon = params.get('previousIcon') || 'arrow-round-back';
+    this.nextIcon = params.get('nextIcon') || 'arrow-round-forward';
     this.initialSlide = params.get('initialSlide') || 0;
+    this.autoLockSwipes = params.get('autoLockSwipes') || false;
 
     this.initialImage = this.photos[this.initialSlide] || {};
+  }
+
+  /** Index of the picture currently being shown. */
+  public getCurrentPictureIndex() {
+    return this.slider.getActiveIndex();
   }
 
   public ngOnInit() {
@@ -57,6 +68,27 @@ export class GalleryModal implements OnInit {
    */
   public dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  /**
+   * Move to the previous picture in gallery.
+   */
+  public goToPreviousPicture() {
+    this.slider.slidePrev();
+  }
+
+  /**
+   * Move to the next picture in gallery.
+   */
+  public goToNextPicture() {
+    this.slider.slideNext();
+  }
+
+  /**
+   * Choose a picture in the gallery.
+   */
+  public choosePicture(index: number) {
+    this.slider.slideTo(index);
   }
 
   private resize(event) {
@@ -86,6 +118,7 @@ export class GalleryModal implements OnInit {
     this.resize(false);
     this.sliderLoaded = true;
     this.slidesStyle.visibility = 'visible';
+    this.lockSwipes();
   }
 
   /**
@@ -110,6 +143,21 @@ export class GalleryModal implements OnInit {
       this.slider.slideTo(this.currentSlide, 0, false);
       this.sliderDisabled = false;
     }
+  }
+
+  /**
+   * Called after slide has changed.
+   *
+   * @param  {Event} event
+   */
+  private slidesDidChange(event) {
+    // NOTE/impl: In some edge cases, the slider goes beyond
+    // the last index. Force it back to the last slide.
+    // TODO: Is this fix avoidable?
+    if (this.getCurrentPictureIndex() >= this.photos.length) {
+      this.slider.slideTo(this.photos.length - 1);
+    }
+    this.lockSwipes();
   }
 
   /**
@@ -185,6 +233,22 @@ export class GalleryModal implements OnInit {
       this.slidesStyle.transform = 'none';
       this.slidesStyle.opacity = 1;
       this.modalStyle.backgroundColor = 'rgba(0, 0, 0, 1)';
+    }
+  }
+
+  /**
+   * Lock the slider from swiping (if necessary).
+   */
+  private lockSwipes() {
+    if (!this.autoLockSwipes) {
+      return;
+    }
+    this.slider.lockSwipes(false);
+    if (this.slider.isBeginning()) {
+      this.slider.lockSwipeToPrev(true);
+    }
+    if (this.slider.isEnd()) {
+      this.slider.lockSwipeToNext(true);
     }
   }
 }

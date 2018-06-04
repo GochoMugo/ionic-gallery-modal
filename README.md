@@ -95,6 +95,10 @@ Let us know or submit a PR! And, please, don't hesitate to contribute. :heart:
 
 ## Changelog
 
+#### v0.3.0
+ * Added *previous*, *next* and *chooser* controls
+ * Added automatic locking of swipes at start/end of slider
+
 #### v0.2.1
  * Fixed a bug which caused the production build to not work
 

@@ -3,16 +3,48 @@
     position: relative;
     overflow: hidden;
 
-    .close-button {
-      position: absolute;
-      top: 10px;
-      left: 5px;
-      background: none;
-      box-shadow: none;
-      z-index: 10;
+    .controls {
+      height: 0;
 
-      &.button-ios {
-        top: 20px;
+      & > button {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        box-shadow: none;
+        margin: 0 10px;
+        position: absolute;
+        z-index: 10;
+      }
+
+      .close-button {
+        top: 10px;
+        left: 5px;
+        &.button-ios {
+          top: 20px;
+        }
+      }
+
+      .previous-button {
+        left: 0;
+        top: 45%;
+      }
+
+      .next-button {
+        right: 0;
+        top: 45%;
+      }
+
+      .chooser {
+        bottom: 20px;
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        z-index: 10;
+
+        button {
+          background: none;
+          box-shadow: none;
+          color: #808080;
+        }
       }
     }
 
