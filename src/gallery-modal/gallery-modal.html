@@ -4,9 +4,24 @@
   (window:resize)="resize($event)"
   (window:orientationchange)="orientationChange($event)"
 >
-  <button class="close-button" ion-button icon-only (click)="dismiss()">
-    <ion-icon name="{{ closeIcon }}"></ion-icon>
-  </button>
+  <!-- Controls -->
+  <div class="controls">
+    <button class="close-button" ion-button icon-only (click)="dismiss()">
+      <ion-icon name="{{ closeIcon }}"></ion-icon>
+    </button>
+    <ng-container *ngIf="sliderLoaded">
+      <button class="previous-button" ion-button icon-only
+        *ngIf="!slider.isBeginning()"
+        (click)="goToPreviousPicture()">
+        <ion-icon name="{{ previousIcon }}"></ion-icon>
+      </button>
+      <button class="next-button" ion-button icon-only
+        *ngIf="!slider.isEnd()"
+        (click)="goToNextPicture()">
+        <ion-icon name="{{ nextIcon }}"></ion-icon>
+      </button>
+    </ng-container>
+  </div>
 
   <!-- Initial image while modal is animating -->
   <div class="image-on-top" [hidden]="sliderLoaded">

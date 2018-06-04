@@ -20,6 +20,8 @@ export class GalleryModal implements OnInit {
   private currentSlide: number = 0;
   private sliderLoaded: boolean = false;
   private closeIcon: string = 'arrow-back';
+  private previousIcon: string = 'arrow-round-back';
+  private nextIcon: string = 'arrow-round-forward';
   private resizeTriggerer: Subject<any> = new Subject();
   private slidesDragging: boolean = false;
   private panUpDownRatio: number = 0;
@@ -42,6 +44,8 @@ export class GalleryModal implements OnInit {
   constructor(private viewCtrl: ViewController, params: NavParams, private element: ElementRef, private platform: Platform, private domSanitizer: DomSanitizer) {
     this.photos = params.get('photos') || [];
     this.closeIcon = params.get('closeIcon') || 'arrow-back';
+    this.previousIcon = params.get('previousIcon') || 'arrow-round-back';
+    this.nextIcon = params.get('nextIcon') || 'arrow-round-forward';
     this.initialSlide = params.get('initialSlide') || 0;
 
     this.initialImage = this.photos[this.initialSlide] || {};
@@ -57,6 +61,20 @@ export class GalleryModal implements OnInit {
    */
   public dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  /**
+   * Move to the previous picture in gallery.
+   */
+  public goToPreviousPicture() {
+    this.slider.slidePrev();
+  }
+
+  /**
+   * Move to the next picture in gallery.
+   */
+  public goToNextPicture() {
+    this.slider.slideNext();
   }
 
   private resize(event) {

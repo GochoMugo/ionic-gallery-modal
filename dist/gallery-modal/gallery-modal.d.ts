@@ -15,6 +15,8 @@ export declare class GalleryModal implements OnInit {
     private currentSlide;
     private sliderLoaded;
     private closeIcon;
+    private previousIcon;
+    private nextIcon;
     private resizeTriggerer;
     private slidesDragging;
     private panUpDownRatio;
@@ -32,6 +34,14 @@ export declare class GalleryModal implements OnInit {
      * Closes the modal (when user click on CLOSE)
      */
     dismiss(): void;
+    /**
+     * Move to the previous picture in gallery.
+     */
+    goToPreviousPicture(): void;
+    /**
+     * Move to the next picture in gallery.
+     */
+    goToNextPicture(): void;
     private resize(event);
     private orientationChange(event);
     /**
