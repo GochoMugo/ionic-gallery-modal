@@ -413,6 +413,8 @@ var GalleryModal = (function () {
         this.currentSlide = 0;
         this.sliderLoaded = false;
         this.closeIcon = 'arrow-back';
+        this.previousIcon = 'arrow-round-back';
+        this.nextIcon = 'arrow-round-forward';
         this.resizeTriggerer = new Subject$1();
         this.slidesDragging = false;
         this.panUpDownRatio = 0;
@@ -430,6 +432,8 @@ var GalleryModal = (function () {
         this.transitionTimingFunction = 'cubic-bezier(0.33, 0.66, 0.66, 1)';
         this.photos = params.get('photos') || [];
         this.closeIcon = params.get('closeIcon') || 'arrow-back';
+        this.previousIcon = params.get('previousIcon') || 'arrow-round-back';
+        this.nextIcon = params.get('nextIcon') || 'arrow-round-forward';
         this.initialSlide = params.get('initialSlide') || 0;
         this.initialImage = this.photos[this.initialSlide] || {};
     }
@@ -446,6 +450,20 @@ var GalleryModal = (function () {
      */
     GalleryModal.prototype.dismiss = function () {
         this.viewCtrl.dismiss();
+    };
+    /**
+     * Move to the previous picture in gallery.
+     * @return {?}
+     */
+    GalleryModal.prototype.goToPreviousPicture = function () {
+        this.slider.slidePrev();
+    };
+    /**
+     * Move to the next picture in gallery.
+     * @return {?}
+     */
+    GalleryModal.prototype.goToNextPicture = function () {
+        this.slider.slideNext();
     };
     /**
      * @param {?} event
@@ -577,8 +595,8 @@ var GalleryModal = (function () {
     GalleryModal.decorators = [
         { type: Component, args: [{
                     selector: 'gallery-modal',
-                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
-                    styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .close-button { position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; } :host .gallery-modal .close-button.button-ios { top: 20px; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
+                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <!-- Controls --> <div class=\"controls\"> <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <button class=\"previous-button\" ion-button icon-only (click)=\"goToPreviousPicture()\"> <ion-icon name=\"{{ previousIcon }}\"></ion-icon> </button> <button class=\"next-button\" ion-button icon-only (click)=\"goToNextPicture()\"> <ion-icon name=\"{{ nextIcon }}\"></ion-icon> </button> </div> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
+                    styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .controls { height: 0; } :host .gallery-modal .controls button { background: rgba(0, 0, 0, 0.2); border-radius: 50%; box-shadow: none; margin: 0 10px; position: absolute; z-index: 10; } :host .gallery-modal .controls .close-button { top: 10px; left: 5px; } :host .gallery-modal .controls .close-button.button-ios { top: 20px; } :host .gallery-modal .controls .previous-button { left: 0; top: 45%; } :host .gallery-modal .controls .next-button { right: 0; top: 45%; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
                 },] },
     ];
     /**
