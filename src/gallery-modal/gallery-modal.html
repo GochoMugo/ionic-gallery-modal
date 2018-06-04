@@ -9,12 +9,18 @@
     <button class="close-button" ion-button icon-only (click)="dismiss()">
       <ion-icon name="{{ closeIcon }}"></ion-icon>
     </button>
-    <button class="previous-button" ion-button icon-only (click)="goToPreviousPicture()">
-      <ion-icon name="{{ previousIcon }}"></ion-icon>
-    </button>
-    <button class="next-button" ion-button icon-only (click)="goToNextPicture()">
-      <ion-icon name="{{ nextIcon }}"></ion-icon>
-    </button>
+    <ng-container *ngIf="sliderLoaded">
+      <button class="previous-button" ion-button icon-only
+        *ngIf="!slider.isBeginning()"
+        (click)="goToPreviousPicture()">
+        <ion-icon name="{{ previousIcon }}"></ion-icon>
+      </button>
+      <button class="next-button" ion-button icon-only
+        *ngIf="!slider.isEnd()"
+        (click)="goToNextPicture()">
+        <ion-icon name="{{ nextIcon }}"></ion-icon>
+      </button>
+    </ng-container>
   </div>
 
   <!-- Initial image while modal is animating -->
