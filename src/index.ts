@@ -34,5 +34,11 @@ import { GalleryModalHammerConfig } from './overrides/gallery-modal-hammer-confi
     GalleryModal,
   ],
 })
-export class GalleryModalModule {}
+export class GalleryModalModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: GalleryModalModule,
+    };
+  }
+}
 export { FittedImage, ZoomableImage, GalleryModal, GalleryModalHammerConfig, TouchEventsDirective }
