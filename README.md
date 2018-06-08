@@ -95,6 +95,10 @@ Let us know or submit a PR! And, please, don't hesitate to contribute. :heart:
 
 ## Changelog
 
+#### v0.3.1
+ * Fixed building with AoT
+ * Fixed bug where slider is unexpectedly unavailable for the *previous* and *next* controls
+
 #### v0.3.0
  * Added *previous*, *next* and *chooser* controls
  * Added automatic locking of swipes at start/end of slider
