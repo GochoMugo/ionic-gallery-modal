@@ -81,26 +81,26 @@ var FittedImage = (function () {
             originalHeight: this.originalDimensions.height,
         });
     };
+    FittedImage.decorators = [
+        { type: Component, args: [{
+                    selector: 'fitted-image',
+                    template: "<div class=\"fitted-image\"> <ion-spinner [hidden]=\"!loading\"></ion-spinner> <img [src]=\"photo.url\" [ngStyle]=\"imageStyle\" (load)=\"imageLoad($event)\" [hidden]=\"loading\" alt=\"\" /> </div> ",
+                    styles: [":host { display: inline-block; } :host .fitted-image { display: inline-block; position: relative; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host .fitted-image ion-spinner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } :host .fitted-image img { display: inline-block; min-width: 0; max-width: none; transform-origin: left top; vertical-align: top; pointer-events: none; } "],
+                },] },
+    ];
+    /**
+     * @nocollapse
+     */
+    FittedImage.ctorParameters = function () { return []; };
+    FittedImage.propDecorators = {
+        'photo': [{ type: Input },],
+        'resizeTriggerer': [{ type: Input },],
+        'wrapperWidth': [{ type: Input },],
+        'wrapperHeight': [{ type: Input },],
+        'onImageResized': [{ type: Output },],
+    };
     return FittedImage;
 }());
-FittedImage.decorators = [
-    { type: Component, args: [{
-                selector: 'fitted-image',
-                template: "<div class=\"fitted-image\"> <ion-spinner [hidden]=\"!loading\"></ion-spinner> <img [src]=\"photo.url\" [ngStyle]=\"imageStyle\" (load)=\"imageLoad($event)\" [hidden]=\"loading\" alt=\"\" /> </div> ",
-                styles: [":host { display: inline-block; } :host .fitted-image { display: inline-block; position: relative; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host .fitted-image ion-spinner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } :host .fitted-image img { display: inline-block; min-width: 0; max-width: none; transform-origin: left top; vertical-align: top; pointer-events: none; } "],
-            },] },
-];
-/**
- * @nocollapse
- */
-FittedImage.ctorParameters = function () { return []; };
-FittedImage.propDecorators = {
-    'photo': [{ type: Input },],
-    'resizeTriggerer': [{ type: Input },],
-    'wrapperWidth': [{ type: Input },],
-    'wrapperHeight': [{ type: Input },],
-    'onImageResized': [{ type: Output },],
-};
 
 var ZoomableImage = (function () {
     function ZoomableImage() {
@@ -371,29 +371,29 @@ var ZoomableImage = (function () {
             this.checkScroll();
         }
     };
+    ZoomableImage.decorators = [
+        { type: Component, args: [{
+                    selector: 'zoomable-image',
+                    template: "<ion-scroll #ionScrollContainer scrollX=\"true\" scrollY=\"true\" zoom=\"false\"> <div class=\"image\" touch-events direction=\"y\" (pinch)=\"pinchEvent($event)\" (pinchstart)=\"pinchStartEvent($event)\" (pinchend)=\"pinchEndEvent($event)\" (doubletap)=\"doubleTapEvent($event)\" (onpan)=\"panEvent($event)\" [ngStyle]=\"containerStyle\" > <fitted-image [photo]=\"photo\" [ngStyle]=\"imageStyle\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"wrapperWidth\" [wrapperHeight]=\"wrapperHeight\" (onImageResized)=\"handleImageResized($event)\" ></fitted-image> </div> </ion-scroll> <div class=\"fitted-image-title\" *ngIf=\"photo.title\" >{{ photo.title }}</div> ",
+                    styles: [":host { display: block; position: relative; width: 100%; height: 100%; } :host ion-scroll { width: 100%; height: 100%; text-align: left; white-space: nowrap; } :host ion-scroll /deep/ .scroll-zoom-wrapper { width: 100%; height: 100%; } :host ion-scroll .image { display: inline-block; position: relative; min-width: 100%; min-height: 100%; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host ion-scroll .image fitted-image { transform-origin: left top; pointer-events: none; } :host .fitted-image-title { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background-color: rgba(0, 0, 0, 0.3); color: white; font-size: 14px; line-height: 18px; text-align: center; z-index: 1; } "],
+                },] },
+    ];
+    /**
+     * @nocollapse
+     */
+    ZoomableImage.ctorParameters = function () { return []; };
+    ZoomableImage.propDecorators = {
+        'ionScrollContainer': [{ type: ViewChild, args: ['ionScrollContainer', { read: ElementRef },] },],
+        'photo': [{ type: Input },],
+        'resizeTriggerer': [{ type: Input },],
+        'wrapperWidth': [{ type: Input },],
+        'wrapperHeight': [{ type: Input },],
+        'disableScroll': [{ type: Output },],
+        'enableScroll': [{ type: Output },],
+        'zoomChange': [{ type: Output },],
+    };
     return ZoomableImage;
 }());
-ZoomableImage.decorators = [
-    { type: Component, args: [{
-                selector: 'zoomable-image',
-                template: "<ion-scroll #ionScrollContainer scrollX=\"true\" scrollY=\"true\" zoom=\"false\"> <div class=\"image\" touch-events direction=\"y\" (pinch)=\"pinchEvent($event)\" (pinchstart)=\"pinchStartEvent($event)\" (pinchend)=\"pinchEndEvent($event)\" (doubletap)=\"doubleTapEvent($event)\" (onpan)=\"panEvent($event)\" [ngStyle]=\"containerStyle\" > <fitted-image [photo]=\"photo\" [ngStyle]=\"imageStyle\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"wrapperWidth\" [wrapperHeight]=\"wrapperHeight\" (onImageResized)=\"handleImageResized($event)\" ></fitted-image> </div> </ion-scroll> <div class=\"fitted-image-title\" *ngIf=\"photo.title\" >{{ photo.title }}</div> ",
-                styles: [":host { display: block; position: relative; width: 100%; height: 100%; } :host ion-scroll { width: 100%; height: 100%; text-align: left; white-space: nowrap; } :host ion-scroll /deep/ .scroll-zoom-wrapper { width: 100%; height: 100%; } :host ion-scroll .image { display: inline-block; position: relative; min-width: 100%; min-height: 100%; transform-origin: left top; background-repeat: no-repeat; background-position: center center; background-size: contain; text-align: left; vertical-align: top; } :host ion-scroll .image fitted-image { transform-origin: left top; pointer-events: none; } :host .fitted-image-title { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background-color: rgba(0, 0, 0, 0.3); color: white; font-size: 14px; line-height: 18px; text-align: center; z-index: 1; } "],
-            },] },
-];
-/**
- * @nocollapse
- */
-ZoomableImage.ctorParameters = function () { return []; };
-ZoomableImage.propDecorators = {
-    'ionScrollContainer': [{ type: ViewChild, args: ['ionScrollContainer', { read: ElementRef },] },],
-    'photo': [{ type: Input },],
-    'resizeTriggerer': [{ type: Input },],
-    'wrapperWidth': [{ type: Input },],
-    'wrapperHeight': [{ type: Input },],
-    'disableScroll': [{ type: Output },],
-    'enableScroll': [{ type: Output },],
-    'zoomChange': [{ type: Output },],
-};
 
 var GalleryModal = (function () {
     /**
@@ -641,28 +641,28 @@ var GalleryModal = (function () {
             this.slider.lockSwipeToNext(true);
         }
     };
+    GalleryModal.decorators = [
+        { type: Component, args: [{
+                    selector: 'gallery-modal',
+                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <!-- Controls --> <div class=\"controls\"> <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <ng-container *ngIf=\"sliderLoaded\"> <button class=\"previous-button\" ion-button icon-only *ngIf=\"!slider.isBeginning()\" (click)=\"goToPreviousPicture()\"> <ion-icon name=\"{{ previousIcon }}\"></ion-icon> </button> <button class=\"next-button\" ion-button icon-only *ngIf=\"!slider.isEnd()\" (click)=\"goToNextPicture()\"> <ion-icon name=\"{{ nextIcon }}\"></ion-icon> </button> </ng-container> <div class=\"chooser\" *ngIf=\"sliderLoaded\"> <button class=\"item\" ion-button icon-only small *ngFor=\"let photo of photos; index as $index\" (click)=\"choosePicture($index)\"> <ion-icon size=\"small\" [name]=\"$index === getCurrentPictureIndex() ? 'radio-button-on' : 'radio-button-off'\"></ion-icon> </button> </div> </div> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDidChange)=\"slidesDidChange($event)\" (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
+                    styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .controls { height: 0; } :host .gallery-modal .controls > button { background: rgba(0, 0, 0, 0.2); border-radius: 50%; box-shadow: none; margin: 0 10px; position: absolute; z-index: 10; } :host .gallery-modal .controls .close-button { top: 10px; left: 5px; } :host .gallery-modal .controls .close-button.button-ios { top: 20px; } :host .gallery-modal .controls .previous-button { left: 0; top: 45%; } :host .gallery-modal .controls .next-button { right: 0; top: 45%; } :host .gallery-modal .controls .chooser { bottom: 20px; position: absolute; text-align: center; width: 100%; z-index: 10; } :host .gallery-modal .controls .chooser button { background: none; box-shadow: none; color: #808080; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
+                },] },
+    ];
+    /**
+     * @nocollapse
+     */
+    GalleryModal.ctorParameters = function () { return [
+        { type: ViewController, },
+        { type: NavParams, },
+        { type: ElementRef, },
+        { type: Platform, },
+        { type: DomSanitizer, },
+    ]; };
+    GalleryModal.propDecorators = {
+        'slider': [{ type: ViewChild, args: ['slider',] },],
+    };
     return GalleryModal;
 }());
-GalleryModal.decorators = [
-    { type: Component, args: [{
-                selector: 'gallery-modal',
-                template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <!-- Controls --> <div class=\"controls\"> <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <ng-container *ngIf=\"sliderLoaded\"> <button class=\"previous-button\" ion-button icon-only *ngIf=\"!slider.isBeginning()\" (click)=\"goToPreviousPicture()\"> <ion-icon name=\"{{ previousIcon }}\"></ion-icon> </button> <button class=\"next-button\" ion-button icon-only *ngIf=\"!slider.isEnd()\" (click)=\"goToNextPicture()\"> <ion-icon name=\"{{ nextIcon }}\"></ion-icon> </button> </ng-container> <div class=\"chooser\" *ngIf=\"sliderLoaded\"> <button class=\"item\" ion-button icon-only small *ngFor=\"let photo of photos; index as $index\" (click)=\"choosePicture($index)\"> <ion-icon size=\"small\" [name]=\"$index === getCurrentPictureIndex() ? 'radio-button-on' : 'radio-button-off'\"></ion-icon> </button> </div> </div> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDidChange)=\"slidesDidChange($event)\" (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
-                styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .controls { height: 0; } :host .gallery-modal .controls > button { background: rgba(0, 0, 0, 0.2); border-radius: 50%; box-shadow: none; margin: 0 10px; position: absolute; z-index: 10; } :host .gallery-modal .controls .close-button { top: 10px; left: 5px; } :host .gallery-modal .controls .close-button.button-ios { top: 20px; } :host .gallery-modal .controls .previous-button { left: 0; top: 45%; } :host .gallery-modal .controls .next-button { right: 0; top: 45%; } :host .gallery-modal .controls .chooser { bottom: 20px; position: absolute; text-align: center; width: 100%; z-index: 10; } :host .gallery-modal .controls .chooser button { background: none; box-shadow: none; color: #808080; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
-            },] },
-];
-/**
- * @nocollapse
- */
-GalleryModal.ctorParameters = function () { return [
-    { type: ViewController, },
-    { type: NavParams, },
-    { type: ElementRef, },
-    { type: Platform, },
-    { type: DomSanitizer, },
-]; };
-GalleryModal.propDecorators = {
-    'slider': [{ type: ViewChild, args: ['slider',] },],
-};
 
 var TouchEventsDirective = (function () {
     /**
@@ -736,34 +736,34 @@ var TouchEventsDirective = (function () {
     TouchEventsDirective.prototype.ngOnDestroy = function () {
         this.gestureListener.destroy();
     };
+    TouchEventsDirective.decorators = [
+        { type: Directive, args: [{
+                    selector: '[touch-events]'
+                },] },
+    ];
+    /**
+     * @nocollapse
+     */
+    TouchEventsDirective.ctorParameters = function () { return [
+        { type: ElementRef, },
+    ]; };
+    TouchEventsDirective.propDecorators = {
+        'direction': [{ type: Input },],
+        'threshold': [{ type: Input },],
+        'pinch': [{ type: Output },],
+        'pinchstart': [{ type: Output },],
+        'pinchend': [{ type: Output },],
+        'onpan': [{ type: Output },],
+        'panup': [{ type: Output },],
+        'pandown': [{ type: Output },],
+        'panleft': [{ type: Output },],
+        'panright': [{ type: Output },],
+        'panend': [{ type: Output },],
+        'pancancel': [{ type: Output },],
+        'doubletap': [{ type: Output },],
+    };
     return TouchEventsDirective;
 }());
-TouchEventsDirective.decorators = [
-    { type: Directive, args: [{
-                selector: '[touch-events]'
-            },] },
-];
-/**
- * @nocollapse
- */
-TouchEventsDirective.ctorParameters = function () { return [
-    { type: ElementRef, },
-]; };
-TouchEventsDirective.propDecorators = {
-    'direction': [{ type: Input },],
-    'threshold': [{ type: Input },],
-    'pinch': [{ type: Output },],
-    'pinchstart': [{ type: Output },],
-    'pinchend': [{ type: Output },],
-    'onpan': [{ type: Output },],
-    'panup': [{ type: Output },],
-    'pandown': [{ type: Output },],
-    'panleft': [{ type: Output },],
-    'panright': [{ type: Output },],
-    'panend': [{ type: Output },],
-    'pancancel': [{ type: Output },],
-    'doubletap': [{ type: Output },],
-};
 
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -803,37 +803,37 @@ var GalleryModalModule = (function () {
             ngModule: GalleryModalModule,
         };
     };
+    GalleryModalModule.decorators = [
+        { type: NgModule, args: [{
+                    imports: [
+                        CommonModule,
+                        IonicPageModule.forChild(TouchEventsDirective),
+                        IonicPageModule.forChild(FittedImage),
+                        IonicPageModule.forChild(ZoomableImage),
+                        IonicPageModule.forChild(GalleryModal),
+                    ],
+                    declarations: [
+                        FittedImage,
+                        ZoomableImage,
+                        GalleryModal,
+                        TouchEventsDirective,
+                    ],
+                    exports: [
+                        FittedImage,
+                        ZoomableImage,
+                        GalleryModal,
+                        TouchEventsDirective,
+                    ],
+                    entryComponents: [
+                        GalleryModal,
+                    ],
+                },] },
+    ];
+    /**
+     * @nocollapse
+     */
+    GalleryModalModule.ctorParameters = function () { return []; };
     return GalleryModalModule;
 }());
-GalleryModalModule.decorators = [
-    { type: NgModule, args: [{
-                imports: [
-                    CommonModule,
-                    IonicPageModule.forChild(TouchEventsDirective),
-                    IonicPageModule.forChild(FittedImage),
-                    IonicPageModule.forChild(ZoomableImage),
-                    IonicPageModule.forChild(GalleryModal),
-                ],
-                declarations: [
-                    FittedImage,
-                    ZoomableImage,
-                    GalleryModal,
-                    TouchEventsDirective,
-                ],
-                exports: [
-                    FittedImage,
-                    ZoomableImage,
-                    GalleryModal,
-                    TouchEventsDirective,
-                ],
-                entryComponents: [
-                    GalleryModal,
-                ],
-            },] },
-];
-/**
- * @nocollapse
- */
-GalleryModalModule.ctorParameters = function () { return []; };
 
 export { GalleryModalModule, FittedImage, ZoomableImage, GalleryModal, GalleryModalHammerConfig, TouchEventsDirective };
