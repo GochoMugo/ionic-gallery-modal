@@ -795,6 +795,14 @@ var GalleryModalHammerConfig = (function (_super) {
 var GalleryModalModule = (function () {
     function GalleryModalModule() {
     }
+    /**
+     * @return {?}
+     */
+    GalleryModalModule.forRoot = function () {
+        return {
+            ngModule: GalleryModalModule,
+        };
+    };
     GalleryModalModule.decorators = [
         { type: core.NgModule, args: [{
                     imports: [
