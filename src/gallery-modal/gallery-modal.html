@@ -9,7 +9,7 @@
     <button class="close-button" ion-button icon-only (click)="dismiss()">
       <ion-icon name="{{ closeIcon }}"></ion-icon>
     </button>
-    <ng-container *ngIf="sliderLoaded">
+    <ng-container *ngIf="sliderLoaded && slider">
       <button class="previous-button" ion-button icon-only
         *ngIf="!slider.isBeginning()"
         (click)="goToPreviousPicture()">
