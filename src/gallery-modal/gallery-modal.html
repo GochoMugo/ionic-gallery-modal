@@ -29,6 +29,13 @@
           [name]="$index === getCurrentPictureIndex() ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
       </button>
     </div>
+    <div class="custom" *ngIf="customControls.length && sliderLoaded && slider">
+      <button ion-button icon-only
+        *ngFor="let control of customControls"
+        (click)="execCustomControlAction(control)">
+        <ion-icon name="{{ control.icon }}"></ion-icon>
+      </button>
+    </div>
   </div>
 
   <!-- Initial image while modal is animating -->

@@ -1,6 +1,7 @@
 import { OnInit, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewController, NavParams, Slides, Platform } from 'ionic-angular';
+import { CustomControl } from '../interfaces/custom-control';
 import { Photo } from '../interfaces/photo-interface';
 export declare class GalleryModal implements OnInit {
     private viewCtrl;
@@ -23,6 +24,7 @@ export declare class GalleryModal implements OnInit {
     private panUpDownDeltaY;
     private dismissed;
     private autoLockSwipes;
+    private customControls;
     private width;
     private height;
     private slidesStyle;
@@ -49,6 +51,11 @@ export declare class GalleryModal implements OnInit {
      * Choose a picture in the gallery.
      */
     choosePicture(index: number): void;
+    /**
+     * Execute a custom control's action passing the expected
+     * arguments and updating the gallery (if need be).
+     */
+    execCustomControlAction(control: CustomControl): void;
     private resize(event);
     private orientationChange(event);
     /**

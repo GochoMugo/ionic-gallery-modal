@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ViewController, NavParams, Slides, Platform } from 'ionic-angular';
+import { CustomControl } from '../interfaces/custom-control';
 import { Photo } from '../interfaces/photo-interface';
 import { Subject } from 'rxjs/Subject';
 
@@ -28,6 +29,7 @@ export class GalleryModal implements OnInit {
   private panUpDownDeltaY: number = 0;
   private dismissed: boolean = false;
   private autoLockSwipes: boolean = false;
+  private customControls: Array<CustomControl> = [];
 
   private width: number = 0;
   private height: number = 0;
@@ -49,6 +51,7 @@ export class GalleryModal implements OnInit {
     this.nextIcon = params.get('nextIcon') || 'arrow-round-forward';
     this.initialSlide = params.get('initialSlide') || 0;
     this.autoLockSwipes = params.get('autoLockSwipes') || false;
+    this.customControls = params.get('customControls') || [];
 
     this.initialImage = this.photos[this.initialSlide] || {};
   }
@@ -89,6 +92,29 @@ export class GalleryModal implements OnInit {
    */
   public choosePicture(index: number) {
     this.slider.slideTo(index);
+  }
+
+  /**
+   * Execute a custom control's action passing the expected
+   * arguments and updating the gallery (if need be).
+   */
+  public execCustomControlAction(control: CustomControl) {
+    const photoIndex = this.getCurrentPictureIndex();
+    const promise = control.action(photoIndex, this.photos[photoIndex], this.photos);
+    if (promise instanceof Promise) {
+      promise.then((photos) => {
+        if (!photos.length) {
+          this.dismiss();
+          return;
+        }
+        const nextPhotoIndex = photos[photoIndex] ?
+          photoIndex :
+          photoIndex - 1;
+        this.photos = photos;
+        this.slider.update();
+        this.slider.slideTo(nextPhotoIndex);
+      });
+    }
   }
 
   private resize(event) {
