@@ -95,6 +95,9 @@ Let us know or submit a PR! And, please, don't hesitate to contribute. :heart:
 
 ## Changelog
 
+#### v0.4.0
+ * Added support for custom controls
+
 #### v0.3.1
  * Fixed building with AoT
  * Fixed bug where slider is unexpectedly unavailable for the *previous* and *next* controls
