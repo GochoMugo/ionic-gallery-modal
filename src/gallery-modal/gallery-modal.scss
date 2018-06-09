@@ -18,6 +18,7 @@
       .close-button {
         top: 10px;
         left: 5px;
+
         &.button-ios {
           top: 20px;
         }
@@ -44,6 +45,20 @@
           background: none;
           box-shadow: none;
           color: #808080;
+        }
+      }
+
+      .custom {
+        position: absolute;
+        right: 5px;
+        top: 10px;
+        z-index: 10;
+
+        button {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 50%;
+          box-shadow: none;
+          margin-left: 4px;
         }
       }
     }
