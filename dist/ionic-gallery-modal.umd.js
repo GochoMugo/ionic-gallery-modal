@@ -418,6 +418,7 @@ var GalleryModal = (function () {
         this.panUpDownRatio = 0;
         this.panUpDownDeltaY = 0;
         this.dismissed = false;
+        this.customControls = [];
         this.width = 0;
         this.height = 0;
         this.slidesStyle = {
@@ -431,8 +432,16 @@ var GalleryModal = (function () {
         this.photos = params.get('photos') || [];
         this.closeIcon = params.get('closeIcon') || 'arrow-back';
         this.initialSlide = params.get('initialSlide') || 0;
+        this.customControls = params.get('customControls') || [];
         this.initialImage = this.photos[this.initialSlide] || {};
     }
+    /**
+     * Index of the picture currently being shown.
+     * @return {?}
+     */
+    GalleryModal.prototype.getCurrentPictureIndex = function () {
+        return this.slider.getActiveIndex();
+    };
     /**
      * @return {?}
      */
@@ -446,6 +455,31 @@ var GalleryModal = (function () {
      */
     GalleryModal.prototype.dismiss = function () {
         this.viewCtrl.dismiss();
+    };
+    /**
+     * Execute a custom control's action passing the expected
+     * arguments and updating the gallery (if need be).
+     * @param {?} control
+     * @return {?}
+     */
+    GalleryModal.prototype.execCustomControlAction = function (control) {
+        var _this = this;
+        var /** @type {?} */ photoIndex = this.getCurrentPictureIndex();
+        var /** @type {?} */ promise = control.action(photoIndex, this.photos[photoIndex], this.photos);
+        if (promise instanceof Promise) {
+            promise.then(function (photos) {
+                if (!photos.length) {
+                    _this.dismiss();
+                    return;
+                }
+                var /** @type {?} */ nextPhotoIndex = photos[photoIndex] ?
+                    photoIndex :
+                    photoIndex - 1;
+                _this.photos = photos;
+                _this.slider.update();
+                _this.slider.slideTo(nextPhotoIndex);
+            });
+        }
     };
     /**
      * @param {?} event
@@ -577,8 +611,8 @@ var GalleryModal = (function () {
     GalleryModal.decorators = [
         { type: core.Component, args: [{
                     selector: 'gallery-modal',
-                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
-                    styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .close-button { position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; } :host .gallery-modal .close-button.button-ios { top: 20px; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
+                    template: "<ion-content class=\"gallery-modal\" no-bounce [ngStyle]=\"modalStyle\" (window:resize)=\"resize($event)\" (window:orientationchange)=\"orientationChange($event)\" > <!-- Controls --> <div class=\"controls\"> <button class=\"close-button\" ion-button icon-only (click)=\"dismiss()\"> <ion-icon name=\"{{ closeIcon }}\"></ion-icon> </button> <div class=\"custom\" *ngIf=\"customControls.length && sliderLoaded && slider\"> <button ion-button icon-only *ngFor=\"let control of customControls\" (click)=\"execCustomControlAction(control)\"> <ion-icon name=\"{{ control.icon }}\"></ion-icon> </button> </div> </div> <!-- Initial image while modal is animating --> <div class=\"image-on-top\" [hidden]=\"sliderLoaded\"> <zoomable-image [photo]=\"initialImage\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" ></zoomable-image> </div> <!-- Slider with images --> <ion-slides class=\"slider\" #slider *ngIf=\"photos.length\" [initialSlide]=\"initialSlide\" [ngStyle]=\"slidesStyle\" touch-events (ionSlideDrag)=\"slidesDrag($event)\" (panup)=\"panUpDownEvent($event)\" (pandown)=\"panUpDownEvent($event)\" (panend)=\"panEndEvent($event)\" (pancancel)=\"panEndEvent($event)\" > <ion-slide *ngFor=\"let photo of photos;\"> <zoomable-image [photo]=\"photo\" [resizeTriggerer]=\"resizeTriggerer\" [wrapperWidth]=\"width\" [wrapperHeight]=\"height\" [ngClass]=\"{ 'swiper-no-swiping': sliderDisabled }\" (disableScroll)=\"disableScroll($event)\" (enableScroll)=\"enableScroll($event)\" ></zoomable-image> </ion-slide> </ion-slides> </ion-content> ",
+                    styles: [":host .gallery-modal { position: relative; overflow: hidden; } :host .gallery-modal .controls .close-button { position: absolute; top: 10px; left: 5px; background: none; box-shadow: none; z-index: 10; } :host .gallery-modal .controls .close-button.button-ios { top: 20px; } :host .gallery-modal .controls .custom { position: absolute; right: 5px; top: 10px; z-index: 10; } :host .gallery-modal .controls .custom button { background: rgba(0, 0, 0, 0.2); border-radius: 50%; box-shadow: none; margin-left: 4px; } :host .gallery-modal .slider /deep/ .slide-zoom { position: relative; height: 100%; } :host .gallery-modal .image-on-top { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; } :host .gallery-modal .image-on-top fitted-image { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); } "],
                 },] },
     ];
     /**

@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { ViewController, NavParams, Slides, Platform } from 'ionic-angular';
+import { CustomControl } from '../interfaces/custom-control';
 import { Photo } from '../interfaces/photo-interface';
 import { Subject } from 'rxjs/Subject';
 
@@ -25,6 +26,7 @@ export class GalleryModal implements OnInit {
   private panUpDownRatio: number = 0;
   private panUpDownDeltaY: number = 0;
   private dismissed: boolean = false;
+  private customControls: Array<CustomControl> = [];
 
   private width: number = 0;
   private height: number = 0;
@@ -43,8 +45,14 @@ export class GalleryModal implements OnInit {
     this.photos = params.get('photos') || [];
     this.closeIcon = params.get('closeIcon') || 'arrow-back';
     this.initialSlide = params.get('initialSlide') || 0;
+    this.customControls = params.get('customControls') || [];
 
     this.initialImage = this.photos[this.initialSlide] || {};
+  }
+
+  /** Index of the picture currently being shown. */
+  public getCurrentPictureIndex() {
+    return this.slider.getActiveIndex();
   }
 
   public ngOnInit() {
@@ -57,6 +65,29 @@ export class GalleryModal implements OnInit {
    */
   public dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  /**
+   * Execute a custom control's action passing the expected
+   * arguments and updating the gallery (if need be).
+   */
+  public execCustomControlAction(control: CustomControl) {
+    const photoIndex = this.getCurrentPictureIndex();
+    const promise = control.action(photoIndex, this.photos[photoIndex], this.photos);
+    if (promise instanceof Promise) {
+      promise.then((photos) => {
+        if (!photos.length) {
+          this.dismiss();
+          return;
+        }
+        const nextPhotoIndex = photos[photoIndex] ?
+          photoIndex :
+          photoIndex - 1;
+        this.photos = photos;
+        this.slider.update();
+        this.slider.slideTo(nextPhotoIndex);
+      });
+    }
   }
 
   private resize(event) {
